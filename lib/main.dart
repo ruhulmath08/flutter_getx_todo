@@ -27,6 +27,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-//https://www.youtube.com/watch?v=LSUO437nI7s&list=PLgGlvOHs_ZdB61bfGgznnepmS-L8ly-XN&index=2
+//https://www.youtube.com/watch?v=5uFlee03cg8&list=PLgGlvOHs_ZdB61bfGgznnepmS-L8ly-XN&index=4&t=2s
 
-//time : 2nd video, 30 min
+//time : 11 min
