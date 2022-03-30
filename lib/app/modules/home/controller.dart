@@ -7,7 +7,8 @@ import 'package:get/get.dart';
 class HomeController extends GetxController {
   TaskRepository taskRepository;
   final formKey = GlobalKey<FormState>();
-  final TextEditingController taskTypeEditController = TextEditingController();
+  final taskTypeEditController = TextEditingController();
+  final tabIndex = 0.obs;
   final chipIndex = 0.obs;
   final deleting = false.obs;
   final tasks = <Task>[].obs;
@@ -22,6 +23,10 @@ class HomeController extends GetxController {
     super.onInit();
     tasks.assignAll(taskRepository.readTasks());
     ever(tasks, (_) => taskRepository.writeTask(tasks));
+  }
+
+  void changeTabIndex(int index) {
+    tabIndex.value = index;
   }
 
   void changeChipIndex(int value) {
@@ -89,11 +94,13 @@ class HomeController extends GetxController {
   bool addTodo(String title) {
     var todo = {'title': title, 'done': false};
 
-    if (doingTodos.any((element) => mapEquals<String, dynamic>(todo, element))) {
+    if (doingTodos
+        .any((element) => mapEquals<String, dynamic>(todo, element))) {
       return false;
     }
     var doneTodo = {'title': title, 'done': true};
-    if (doneTodos.any((element) => mapEquals<String, dynamic>(doneTodo, element))) {
+    if (doneTodos
+        .any((element) => mapEquals<String, dynamic>(doneTodo, element))) {
       return false;
     }
 
@@ -112,7 +119,8 @@ class HomeController extends GetxController {
 
   void doneTodo(String title) {
     var doingTodo = {'title': title, 'done': false};
-    int index = doingTodos.indexWhere((element) => mapEquals<String, dynamic>(doingTodo, element));
+    int index = doingTodos.indexWhere(
+        (element) => mapEquals<String, dynamic>(doingTodo, element));
     doingTodos.removeAt(index);
     var doneTodo = {'title': title, 'done': true};
     doneTodos.add(doneTodo);
@@ -121,7 +129,8 @@ class HomeController extends GetxController {
   }
 
   void deleteDoneTodo(dynamic doneTodo) {
-    int index = doneTodos.indexWhere((element) => mapEquals<String, dynamic>(doneTodo, element));
+    int index = doneTodos
+        .indexWhere((element) => mapEquals<String, dynamic>(doneTodo, element));
     doneTodos.removeAt(index);
     doneTodos.refresh();
   }
@@ -137,7 +146,30 @@ class HomeController extends GetxController {
         res += 1;
       }
     }
+    return res;
+  }
 
+  int getTotalTask() {
+    var res = 0;
+    for (int i = 0; i < tasks.length; i++) {
+      if (tasks[i].todos != null) {
+        res += tasks[i].todos!.length;
+      }
+    }
+    return res;
+  }
+
+  int getTotalDoneTask() {
+    var res = 0;
+    for (int i = 0; i < tasks.length; i++) {
+      if (tasks[i].todos != null) {
+        for (int j = 0; j < tasks[i].todos!.length; j++) {
+          if (tasks[i].todos![j]['done'] == true) {
+            res += 1;
+          }
+        }
+      }
+    }
     return res;
   }
 }
